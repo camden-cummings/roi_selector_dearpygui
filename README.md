@@ -14,7 +14,7 @@ ROI and line selection of ROIs using DearPyGUI and Python.
    ```
 2. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/camden-cummings/roi_selector_dearpygui
    ```
 
 ## Usage
