@@ -1,17 +1,12 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jan 28 13:47:51 2025
-
-@author: chamomile
-"""
+""""""
 import math
-import re
 import pickle
+import re
 
 import dearpygui.dearpygui as dpg
 
 from helpers import get_mouse_pos, convert_to_in_bounds
+
 
 class LineInterface:
     """Allows manipulating of lines going from top to bottom of given window, and creation of poly based on that."""
@@ -29,7 +24,7 @@ class LineInterface:
         self.window = window
 
         self.last = (False, False)
-        self.last_mouse_posn = None
+        self.last_mouse_pos = None
 
         self.hor_lines = 1
         self.vert_lines = 1
@@ -64,23 +59,23 @@ class LineInterface:
     def motion_notify_callback(self):
         """When mouse moves and user is currently dragging a line, update line's position."""
         if self.drag_line is not None:
-            mouse_posn = get_mouse_pos(self.shift)
+            mouse_pos = get_mouse_pos(self.shift)
 
-            if (self.shift[0] <= mouse_posn[0] <= self.shift[0]+self.frame_width) and (self.shift[1] <= mouse_posn[1] <= self.shift[1]+self.frame_height):
-                self.move_line(mouse_posn)
+            if (self.shift[0] <= mouse_pos[0] <= self.shift[0]+self.frame_width) and (self.shift[1] <= mouse_pos[1] <= self.shift[1]+self.frame_height):
+                self.move_line(mouse_pos)
 
         elif self.middle_drag_line is not None:
-            mouse_posn = get_mouse_pos(self.shift)
+            mouse_pos = get_mouse_pos(self.shift)
 
-            if (self.shift[0] <= mouse_posn[0] <= self.shift[0]+self.frame_width) and (self.shift[1] <= mouse_posn[1] <= self.shift[1]+self.frame_height):
-                self.move_line_by_middle(mouse_posn)
+            if (self.shift[0] <= mouse_pos[0] <= self.shift[0]+self.frame_width) and (self.shift[1] <= mouse_pos[1] <= self.shift[1]+self.frame_height):
+                self.move_line_by_middle(mouse_pos)
 
     def left_mouse_press_callback(self):
         """When user clicks, check if there's a line nearby to begin dragging."""
-        mouse_posn = get_mouse_pos(self.shift)
+        mouse_pos = get_mouse_pos(self.shift)
 
         if self.drag_line is None and self.middle_drag_line is None:  # we haven't selected a point to drag
-            self.check_for_selection(mouse_posn)
+            self.check_for_selection(mouse_pos)
 
     def left_mouse_release_callback(self):
         """When mouse is released, no longer dragging line."""
@@ -113,13 +108,13 @@ class LineInterface:
         """Move all lines right."""
         self.move_lines_incremented(-1, 0)
 
-    def move_line(self, mouse_posn: tuple[int, int]):
+    def move_line(self, mouse_pos: tuple[int, int]):
         """
         Calculates where to move the line and sets it to the value.
 
         Parameters
         ----------
-        mouse_posn :
+        mouse_pos :
 
         """
         config_dict = dpg.get_item_configuration(self.drag_line)
@@ -143,9 +138,9 @@ class LineInterface:
                     self.frame_height/2)+self.shift[1] else self.shift[1]
 
             if self.drag_point == 1:
-                dpg.configure_item(self.drag_line, p1=[mouse_posn[0], dr_y])
+                dpg.configure_item(self.drag_line, p1=[mouse_pos[0], dr_y])
             else:
-                dpg.configure_item(self.drag_line, p2=[mouse_posn[0], dr_y])
+                dpg.configure_item(self.drag_line, p2=[mouse_pos[0], dr_y])
 
         elif moving_hor:
             dr_x = self.frame_width + \
@@ -153,15 +148,15 @@ class LineInterface:
                     self.frame_width/2)+self.shift[0] else self.shift[0]
 
             if self.drag_point == 1:
-                dpg.configure_item(self.drag_line, p1=[dr_x, mouse_posn[1]])
+                dpg.configure_item(self.drag_line, p1=[dr_x, mouse_pos[1]])
             else:
-                dpg.configure_item(self.drag_line, p2=[dr_x, mouse_posn[1]])
+                dpg.configure_item(self.drag_line, p2=[dr_x, mouse_pos[1]])
 
-    def move_line_by_middle(self, mouse_posn: tuple[int, int]):
+    def move_line_by_middle(self, mouse_pos: tuple[int, int]):
         """Moves selected line around using middle point as handle."""
 
-        dx = self.last_mouse_posn[0] - mouse_posn[0]
-        dy = self.last_mouse_posn[1] - mouse_posn[1]
+        dx = self.last_mouse_pos[0] - mouse_pos[0]
+        dy = self.last_mouse_pos[1] - mouse_pos[1]
 
         config_dict = dpg.get_item_configuration(self.middle_drag_line)
         p1 = config_dict["p1"]
@@ -172,19 +167,19 @@ class LineInterface:
         #if self.shift[0]+self.frame_width in [p1[0], p2[0]] and self.shift[1]+self.frame_height in [p1[1], p2[1]]:
         #    print("1")
             
-        if (p1[0] == self.shift[0]+self.frame_width and p2[1] == self.shift[1]+self.frame_height):
+        if p1[0] == self.shift[0]+self.frame_width and p2[1] == self.shift[1]+self.frame_height:
             print("2")
             
             scale = (dx+dy)/2
-            p1 = convert_to_in_bounds([p1[0], p1[1]-scale], self.frame_width, self.frame_height, self.shift)
-            p2 = convert_to_in_bounds([p2[0]-scale, p2[1]], self.frame_width, self.frame_height, self.shift)
+            p1 = convert_to_in_bounds((p1[0], p1[1]-scale), self.frame_width, self.frame_height, self.shift)
+            p2 = convert_to_in_bounds((p2[0]-scale, p2[1]), self.frame_width, self.frame_height, self.shift)
 
             dpg.configure_item(self.middle_drag_line, p1=p1, p2=p2)
-        elif (p2[0] == self.shift[0]+self.frame_width and p1[1] == self.shift[1]+self.frame_height):    
+        elif p2[0] == self.shift[0]+self.frame_width and p1[1] == self.shift[1]+self.frame_height:
             scale = (dx+dy)/2
             
-            p1 = convert_to_in_bounds([p1[0]-scale, p1[1]], self.frame_width, self.frame_height, self.shift)
-            p2 = convert_to_in_bounds([p2[0], p2[1]-scale], self.frame_width, self.frame_height, self.shift)
+            p1 = convert_to_in_bounds((p1[0]-scale, p1[1]), self.frame_width, self.frame_height, self.shift)
+            p2 = convert_to_in_bounds((p2[0], p2[1]-scale), self.frame_width, self.frame_height, self.shift)
 
             dpg.configure_item(self.middle_drag_line, p1=p1, p2=p2)
             
@@ -197,29 +192,29 @@ class LineInterface:
         
         #vertical
         elif abs(dx) > abs(dy) and self.shift[0] not in [p1[0], p2[0]] and self.shift[0]+self.frame_width not in [p1[0], p2[0]]:
-            p1 = convert_to_in_bounds([p1[0]-dx, p1[1]], self.frame_width, self.frame_height, self.shift)
-            p2 = convert_to_in_bounds([p2[0]-dx, p2[1]], self.frame_width, self.frame_height, self.shift)
+            p1 = convert_to_in_bounds((p1[0]-dx, p1[1]), self.frame_width, self.frame_height, self.shift)
+            p2 = convert_to_in_bounds((p2[0]-dx, p2[1]), self.frame_width, self.frame_height, self.shift)
 
             dpg.configure_item(self.middle_drag_line, p1=p1, p2=p2)
 
         # horizontal
         elif abs(dy) > abs(dx) and self.shift[1] not in [p1[1], p2[1]] and self.shift[1]+self.frame_height not in [p1[1], p2[1]]:
-            p1 = convert_to_in_bounds([p1[0], p1[1]-dy], self.frame_width, self.frame_height, self.shift)
-            p2 = convert_to_in_bounds([p2[0], p2[1]-dy], self.frame_width, self.frame_height, self.shift)
+            p1 = convert_to_in_bounds((p1[0], p1[1]-dy), self.frame_width, self.frame_height, self.shift)
+            p2 = convert_to_in_bounds((p2[0], p2[1]-dy), self.frame_width, self.frame_height, self.shift)
 
             dpg.configure_item(self.middle_drag_line, p1=p1, p2=p2)
 
         print(p1, p2)
 
-        self.last_mouse_posn = mouse_posn
+        self.last_mouse_pos = mouse_pos
 
-    def check_for_selection(self, mouse_posn: tuple[int, int]):
+    def check_for_selection(self, mouse_pos: tuple[int, int]):
         """
         Checks if one of the vertices of the line is being selected.
 
         Parameters
         ----------
-        mouse_posn :
+        mouse_pos :
 
 
         """
@@ -235,7 +230,7 @@ class LineInterface:
                 x, y = config_dict["p"+str(point_num)]
                 all_xs += x
                 all_ys += y
-                dist = math.dist((x, y), mouse_posn)
+                dist = math.dist((x, y), mouse_pos)
                 if dist < self.hypotenuse/16:
                     if closest:
                         if dist < closest[1]:
@@ -244,13 +239,13 @@ class LineInterface:
                         closest = ((line, point_num), dist)
 
             middle_point = [int(all_xs/2), int(all_ys/2)]
-            mid_dist = math.dist(middle_point, mouse_posn)
+            mid_dist = math.dist(middle_point, mouse_pos)
             if mid_dist < self.hypotenuse/16:
                 if closest_middle:
                     if mid_dist < closest_middle[1]:
-                        closest_middle = ((line, mouse_posn), mid_dist)
+                        closest_middle = ((line, mouse_pos), mid_dist)
                 else:
-                    closest_middle = ((line, mouse_posn), mid_dist)
+                    closest_middle = ((line, mouse_pos), mid_dist)
 
         if closest:
             self.drag_line = closest[0][0]
@@ -258,11 +253,11 @@ class LineInterface:
 
         if closest_middle:
             self.middle_drag_line = closest_middle[0][0]
-            self.last_mouse_posn = closest_middle[0][1]
+            self.last_mouse_pos = closest_middle[0][1]
 
     def check_for_hover(self):
         """Check if mouse hovering over poly or poly vertex."""
-        mouse_posn = get_mouse_pos(self.shift)
+        mouse_pos = get_mouse_pos(self.shift)
         points = []
         line_num = -1
         for line in self.lines:
@@ -272,7 +267,7 @@ class LineInterface:
 
             line_centr = ((p1[0]+p2[0])/2, (p1[1]+p2[1])/2)
 
-            if math.dist(line_centr, mouse_posn) < self.hypotenuse/16:
+            if math.dist(line_centr, mouse_pos) < self.hypotenuse/16:
                 points = [p1, p2]
                 line_num = line
 

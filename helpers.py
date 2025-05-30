@@ -1,10 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb 27 14:12:36 2025
-
-@author: chamomile
-"""
+""""""
 
 import dearpygui.dearpygui as dpg
 

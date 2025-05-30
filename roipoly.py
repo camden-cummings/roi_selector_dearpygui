@@ -1,12 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jan 24 12:22:20 2025
-
-@author: chamomile
-"""
+""""""
 import dearpygui.dearpygui as dpg
-
 from shapely.geometry import Polygon
 
 from helpers import get_mouse_pos
@@ -69,11 +62,9 @@ class RoiPoly:
     def right_mouse_press_callback(self):
         """Complete polygon if right mouse is clicked and there are enough points to make one."""
         if len(self.lines) > 3:
-            print("right press")
             self.lines = self.lines[:-1]
             dpg.configure_item(self.poly, points=self.lines, closed=True)
             self.finish_roi()
-            print(self.area)
             self.completed = True
 
     def motion_notify_callback(self):

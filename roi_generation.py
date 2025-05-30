@@ -1,15 +1,9 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb 27 11:55:21 2025
-
-@author: chamomile
-"""
+""""""
 import math
 
 import cv2
-import numpy as np
 import dearpygui.dearpygui as dpg
+import numpy as np
 
 
 def generate_rois(lines, frame_height, frame_width, shift):

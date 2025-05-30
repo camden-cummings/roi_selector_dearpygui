@@ -1,11 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 11 12:30:38 2025
-
-@author: chamomile
-"""
+""""""
 import dearpygui.dearpygui as dpg
+
 
 class GUI:
     """Sets and manages GUI elements - set up for line interface and ROI interface. """
@@ -13,7 +8,7 @@ class GUI:
     def __init__(self, window, frame_width=500, frame_height=500): #TODO investigate if this works for basic ROI
         self.frame_width = frame_width
         self.frame_height = frame_height
-        #self.roi, self.line, self.roi_and_line_selection, self.post_line, self.state_manager = self.setup_elements(window)
+        self.roi, self.line, self.roi_and_line_selection, self.post_line, self.state_manager = self.setup_elements(window)
 
 
     def change_selection_mode(self, _, data):
@@ -50,6 +45,8 @@ class GUI:
         with dpg.group(label="roi buttons", pos=[shift, down_shift]) as roi:
             dpg.add_button(label="New ROI", callback=state_manager.new_roi)
 
+            dpg.add_checkbox(label="Allow Point Drag", callback=state_manager.roi_interface.toggle_point_drag_callback)
+
             with dpg.file_dialog(directory_selector=False, show=False, callback=state_manager.roi_interface.load_rois_callback,
                                  id="roi_load_file", width=700, height=400, default_path=curr_dir, default_filename=curr_name):
                 dpg.add_file_extension(".cells", color=(0, 255, 0, 255), custom_text="[ROI Save File]")
@@ -77,11 +74,11 @@ class GUI:
         with dpg.group(label="line buttons", pos=[shift, down_shift]) as line:
             dpg.add_button(
                 label="Vertical Line", callback=state_manager.line_interface.vertical_line_callback)
-            dpg.add_input_text(width=15, source="int_value", default_value=1, pos=[
+            dpg.add_input_text(width=15, source="int_value", default_value="1", pos=[
                 shift+104, down_shift], callback=state_manager.line_interface.num_of_vert_lines_changer)
             dpg.add_button(label="Horizontal Line",
                            callback=state_manager.line_interface.horizontal_line_callback)
-            dpg.add_input_text(width=15, source="int_value", default_value=1, pos=[
+            dpg.add_input_text(width=15, source="int_value", default_value="1", pos=[
                 shift+118, down_shift+23], callback=state_manager.line_interface.num_of_hor_lines_changer)
             dpg.add_button(label="Generate ROIs", callback=self.generate_rois)
 
@@ -90,8 +87,7 @@ class GUI:
                 dpg.add_file_extension(".lines", color=(
                     0, 255, 0, 255), custom_text="[Line Save File]")
 
-            dpg.add_button(label="Save Line Configuration",
-                           callback="line_save_file")
+            dpg.add_button(label="Save Line Configuration", callback=dpg.show_item("line_save_file"))
 
             with dpg.file_dialog(directory_selector=False, show=False, 
                                  callback=state_manager.line_interface.load_lines, id="line_load_file", width=700, height=400):
@@ -130,7 +126,7 @@ class GUI:
                 min_value=0.0,
                 max_value=max_roi_area,
                 default_value=0.0,
-                callback=state_manager.roi_slider_size_callback_min
+                callback=state_manager.roi_interface.roi_slider_size_callback_min
             )
 
             dpg.add_slider_double(
@@ -141,7 +137,7 @@ class GUI:
                 min_value=0.0,
                 max_value=max_roi_area, 
                 default_value=max_roi_area,
-                callback=state_manager.roi_slider_size_callback_max
+                callback=state_manager.roi_interface.roi_slider_size_callback_max
             )
 
             dpg.add_text("MIN SIZE", pos=(shift+10, down_shift+210))

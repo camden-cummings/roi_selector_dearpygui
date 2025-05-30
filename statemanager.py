@@ -1,16 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan 30 14:55:53 2025
-
-@author: chamomile
-"""
+""""""
 import dearpygui.dearpygui as dpg
 
-from roipoly import RoiPoly
-from roiinterface import ROIInterface
 from lineinterface import LineInterface
 from roi_generation import generate_rois
+from roiinterface import ROIInterface
+from roipoly import RoiPoly
 
 
 class StateManager:
@@ -116,26 +110,6 @@ class StateManager:
             dpg.delete_item(roi.poly)
 
         self.roi_interface.rois.clear()
-
-    def roi_slider_size_callback_min(self, _, allowed_area):
-        """Shows or hides ROIs based on value of allowed area."""
-        self.roi_interface.allowed_area_min = allowed_area
-
-        for roi in self.roi_interface.rois:
-            if roi.area < allowed_area or roi.area > self.roi_interface.allowed_area_max:
-                dpg.hide_item(roi.poly)
-            else:
-                dpg.show_item(roi.poly)
-
-    def roi_slider_size_callback_max(self, _, allowed_area):
-        """Shows or hides ROIs based on value of allowed area."""
-        self.roi_interface.allowed_area_max = allowed_area
-
-        for roi in self.roi_interface.rois:
-            if roi.area > allowed_area or roi.area < self.roi_interface.allowed_area_min:
-                dpg.hide_item(roi.poly)
-            else:
-                dpg.show_item(roi.poly)
 
     def copy_callback(self, _, __):
         """Callback from copy (ctrl+c) pressed, decides if a line or ROI should be copied."""

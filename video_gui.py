@@ -1,15 +1,18 @@
+""""""
 from pathlib import Path
 
+import cv2
 import dearpygui.dearpygui as dpg
 import numpy as np
-import cv2
 
-from helpers import update_frame_shape, get_shape
-from statemanager import StateManager
 from gui import GUI
+from helpers import update_frame_shape
+from statemanager import StateManager
 
 
 class VideoGUI(GUI):
+    """"""
+
     def __init__(self, window, frame_width, frame_height, filename: str):
         self.vidcap = cv2.VideoCapture(filename)
 
@@ -28,8 +31,6 @@ class VideoGUI(GUI):
         update_frame_shape(self.state_manager, self.frame_width, self.frame_height)
         update_frame_shape(self.state_manager.roi_interface, self.frame_width, self.frame_height)
         update_frame_shape(self.state_manager.line_interface, self.frame_width, self.frame_height)
-
-        # file_path_name = appdata["file_path_name"]
 
     def start(self, window):
         raw_data = np.zeros((self.frame_height, self.frame_width, 3), dtype=np.float32)
@@ -87,7 +88,7 @@ class VideoGUI(GUI):
                         dpg.add_file_extension(vid_ext, color=(
                             0, 255, 0, 255), custom_text="[Video File]")
                     for img_ext in [".png"]:
-                        dpg.add_file_extension(vid_ext, color=(
+                        dpg.add_file_extension(img_ext, color=(
                             0, 255, 0, 255), custom_text="[Image File]")
 
                 dpg.add_button(label="Choose Video/Image", callback=lambda: dpg.show_item("open_file"), pos=[shift, 2])
