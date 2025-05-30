@@ -1,6 +1,6 @@
 """"""
 import dearpygui.dearpygui as dpg
-
+from statemanager import StateManager
 
 class GUI:
     """Sets and manages GUI elements - set up for line interface and ROI interface. """
@@ -172,4 +172,22 @@ class GUI:
                 key=dpg.mvKey_D, callback=state_manager.line_interface.right_callback)
 
     def setup_elements(self, window):
-        return None, None, None, None, None
+        state_manager = StateManager(window, self.frame_width, self.frame_height)
+        self.setup_keypress(state_manager)
+
+        with dpg.child_window(border=False, parent=window):
+            with dpg.group() as roi_and_line_selection:
+                shift = self.frame_width + 10
+
+                dpg.add_combo(("ROI", "Line"), label="Mode", width=50, pos=[
+                    shift, 0], callback=self.change_selection_mode, default_value="ROI")
+
+                roi = self.setup_roi_buttons(
+                    shift, 27, "", "", state_manager)
+                line = self.setup_line_buttons(shift, 27, state_manager)
+                dpg.hide_item(line)
+
+            post_line = self.setup_post_line_buttons(shift, 0, state_manager, "", "", self.frame_width*self.frame_height)
+            dpg.hide_item(post_line)
+
+        return roi, line, roi_and_line_selection, post_line, state_manager
