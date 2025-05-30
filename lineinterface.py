@@ -152,7 +152,7 @@ class LineInterface:
             else:
                 dpg.configure_item(self.drag_line, p2=[dr_x, mouse_pos[1]])
 
-    def move_line_by_middle(self, mouse_pos: tuple[int, int]):
+    def move_line_by_middle(self, mouse_pos: tuple[int, int]): #@TODO fix whatever is going on here
         """Moves selected line around using middle point as handle."""
 
         dx = self.last_mouse_pos[0] - mouse_pos[0]
@@ -298,9 +298,10 @@ class LineInterface:
                     255, 0, 0, 255), parent=self.window)
                 self.lines.append(loaded_line)
 
-    def save_lines(self, path):
+    def save_lines(self, _, app_data: dict):
         """Saves all current lines."""
-        with open(path[:-4] + ".lines", 'wb') as filename:
+
+        with open(app_data["file_path_name"][:-4] + ".lines", 'wb') as filename:
             new_lines = []
             for line in self.lines:
                 config_dict = dpg.get_item_configuration(line)

@@ -10,7 +10,6 @@ class GUI:
         self.frame_height = frame_height
         self.roi, self.line, self.roi_and_line_selection, self.post_line, self.state_manager = self.setup_elements(window)
 
-
     def change_selection_mode(self, _, data):
         """Changes set of buttons based on mode selected."""
         if data == "ROI":
@@ -22,6 +21,7 @@ class GUI:
         elif data == "Line":
             dpg.show_item(self.line)
             dpg.hide_item(self.roi)
+
             self.state_manager.ROI_mode_selected = False
 
     def generate_rois(self):
@@ -82,17 +82,17 @@ class GUI:
                 shift+118, down_shift+23], callback=state_manager.line_interface.num_of_hor_lines_changer)
             dpg.add_button(label="Generate ROIs", callback=self.generate_rois)
 
-            with dpg.file_dialog(directory_selector=False, show=False, 
+            with dpg.file_dialog(directory_selector=False, show=False,
                                  callback=state_manager.line_interface.save_lines, id="line_save_file", width=700, height=400):
                 dpg.add_file_extension(".lines", color=(
                     0, 255, 0, 255), custom_text="[Line Save File]")
 
-            dpg.add_button(label="Save Line Configuration", callback=dpg.show_item("line_save_file"))
+            dpg.add_button(label="Save Line Configuration", callback=lambda: dpg.show_item("line_save_file"))
 
             with dpg.file_dialog(directory_selector=False, show=False, 
                                  callback=state_manager.line_interface.load_lines, id="line_load_file", width=700, height=400):
                 dpg.add_file_extension(".lines", color=(
-                    0, 255, 0, 255), custom_text="[Line Save File]")
+                    0, 255, 0, 255), custom_text="[Line Load File]")
 
             dpg.add_button(label="Load Line Configuration",
                            callback=lambda: dpg.show_item("line_load_file"))
@@ -100,7 +100,7 @@ class GUI:
             dpg.add_button(label="Clear Screen and Start Over", pos=[
                            shift, down_shift+123], callback=state_manager.clear_window)
             dpg.add_text(
-                "NOTES \nclick and hold the edge of a ROI to rotate it \n\nSHORTCUTS \n ctrl+c: copy \n del: delete \n WASD: move all lines", 
+                "NOTES \nclick and hold the edge of a ROI to rotate it \n\nSHORTCUTS \n ctrl+c: copy \n del: delete \n WASD: move all lines",
                 pos=(shift+5, down_shift+140), wrap=150)
 
         return line
