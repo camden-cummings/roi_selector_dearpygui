@@ -38,8 +38,11 @@ class ROIInterface:
     def left_mouse_release_callback(self):
         """Reset all because mouse is no longer down."""
         self.drag_polygon = None
-        self.selected_polygon_vert = None
-        self.selected_polygon = None
+
+        if self.selected_polygon is not None:
+            self.adjust_points_to_in_bounds(self.selected_polygon)
+            self.selected_polygon_vert = None
+            self.selected_polygon = None
         self.prev = None
 
     def roi_slider_size_callback_min(self, _, allowed_area):
@@ -193,6 +196,29 @@ class ROIInterface:
         self.selected_polygon.lines = rotated_poly
         dpg.configure_item(self.selected_polygon.poly,
                            points=self.selected_polygon.lines)
+
+    def adjust_points_to_in_bounds(self, polygon):
+        """Naive algorithm to move points back inside bounds of frame."""
+        num_of_points = len(polygon.lines)
+        for point in polygon.lines:
+            adj_x, adj_y = 0, 0
+
+            if point[0] > self.shift[0] + self.frame_width:
+                adj_x = self.shift[0] + self.frame_width - point[0]
+            elif self.shift[0] > point[0]:
+                adj_x = self.shift[0] + abs(point[0])
+
+            if point[1] > self.shift[1] + self.frame_height:
+                adj_y = self.shift[1] + self.frame_height - point[1]
+            elif self.shift[1] > point[1]:
+                adj_y = self.shift[1] + abs(point[1])
+
+            for i in range(num_of_points):
+                polygon.lines[i][0] += adj_x
+                polygon.lines[i][1] += adj_y
+
+            dpg.configure_item(polygon.poly,
+                               points=polygon.lines)
 
     def convert_rois_to_np_array(self, rois):
         """Converts all ROIPolys to numpy arrays."""
