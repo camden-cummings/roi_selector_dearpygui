@@ -1,4 +1,3 @@
-""""""
 import math
 import pickle
 import re
@@ -162,36 +161,8 @@ class LineInterface:
         p1 = config_dict["p1"]
         p2 = config_dict["p2"]
 
-        print(abs(dx), abs(dy))
-
-        #if self.shift[0]+self.frame_width in [p1[0], p2[0]] and self.shift[1]+self.frame_height in [p1[1], p2[1]]:
-        #    print("1")
-            
-        if p1[0] == self.shift[0]+self.frame_width and p2[1] == self.shift[1]+self.frame_height:
-            print("2")
-            
-            scale = (dx+dy)/2
-            p1 = convert_to_in_bounds((p1[0], p1[1]-scale), self.frame_width, self.frame_height, self.shift)
-            p2 = convert_to_in_bounds((p2[0]-scale, p2[1]), self.frame_width, self.frame_height, self.shift)
-
-            dpg.configure_item(self.middle_drag_line, p1=p1, p2=p2)
-        elif p2[0] == self.shift[0]+self.frame_width and p1[1] == self.shift[1]+self.frame_height:
-            scale = (dx+dy)/2
-            
-            p1 = convert_to_in_bounds((p1[0]-scale, p1[1]), self.frame_width, self.frame_height, self.shift)
-            p2 = convert_to_in_bounds((p2[0], p2[1]-scale), self.frame_width, self.frame_height, self.shift)
-
-            dpg.configure_item(self.middle_drag_line, p1=p1, p2=p2)
-            
-        elif (p1[0] == self.shift[0] and p2[1] == self.shift[1]+self.frame_height) or (p2[0] == self.shift[0] and p1[1] == self.shift[1]+self.frame_height):
-            pass
-        elif (p1[0] == self.shift[0]+self.frame_width and p2[1] == self.shift[1]) or (p2[0] == self.shift[0]+self.frame_width and p1[1] == self.shift[1]):
-            pass
-        elif (p1[0] == self.shift[0] and p2[1] == self.shift[1]) or (p2[0] == self.shift[0] and p1[1] == self.shift[1]):
-            pass
-        
         #vertical
-        elif abs(dx) > abs(dy) and self.shift[0] not in [p1[0], p2[0]] and self.shift[0]+self.frame_width not in [p1[0], p2[0]]:
+        if abs(dx) > abs(dy) and self.shift[0] not in [p1[0], p2[0]] and self.shift[0]+self.frame_width not in [p1[0], p2[0]]:
             p1 = convert_to_in_bounds((p1[0]-dx, p1[1]), self.frame_width, self.frame_height, self.shift)
             p2 = convert_to_in_bounds((p2[0]-dx, p2[1]), self.frame_width, self.frame_height, self.shift)
 
@@ -203,8 +174,6 @@ class LineInterface:
             p2 = convert_to_in_bounds((p2[0], p2[1]-dy), self.frame_width, self.frame_height, self.shift)
 
             dpg.configure_item(self.middle_drag_line, p1=p1, p2=p2)
-
-        print(p1, p2)
 
         self.last_mouse_pos = mouse_pos
 
@@ -265,9 +234,9 @@ class LineInterface:
             p1 = config_dict["p1"]
             p2 = config_dict["p2"]
 
-            line_centr = ((p1[0]+p2[0])/2, (p1[1]+p2[1])/2)
+            line_center = ((p1[0]+p2[0])/2, (p1[1]+p2[1])/2)
 
-            if math.dist(line_centr, mouse_pos) < self.hypotenuse/16:
+            if math.dist(line_center, mouse_pos) < self.hypotenuse/16:
                 points = [p1, p2]
                 line_num = line
 
