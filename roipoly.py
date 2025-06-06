@@ -1,4 +1,3 @@
-""""""
 import dearpygui.dearpygui as dpg
 from shapely.geometry import Polygon
 

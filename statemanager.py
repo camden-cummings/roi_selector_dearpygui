@@ -1,4 +1,3 @@
-""""""
 import dearpygui.dearpygui as dpg
 
 from lineinterface import LineInterface
@@ -120,7 +119,7 @@ class StateManager:
 
         self.ctrl_has_been_pressed = False
 
-    def control_callback(self, _, __):  # janky soln to key press check
+    def control_callback(self, _, __):  # janky solution to key press check
         self.ctrl_has_been_pressed = True
 
     def delete_callback(self, _, __):

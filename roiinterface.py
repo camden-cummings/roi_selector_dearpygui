@@ -1,5 +1,3 @@
-"""
-"""
 import math
 import pickle
 
@@ -66,7 +64,7 @@ class ROIInterface:
                 dpg.show_item(roi.poly)
 
     def motion_notify_callback(self):
-        """When mouse moving, if drag polygon, moves, if selected polygon vertex, rotates."""
+        """When mouse moving, if drag_polygon, moves polygon by center, if selected_polygon_vertex, rotates."""
         x, y = get_mouse_pos(self.shift)
 
         if self.dragging_points and self.selected_polygon is not None:
@@ -87,6 +85,7 @@ class ROIInterface:
                 self.prev = theta
 
     def toggle_point_drag_callback(self, _, __):
+        """Toggles allowing individual points on polygons to be dragged or not dragged."""
         self.dragging_points = not self.dragging_points
 
     def save_rois_callback(self, _, app_data: dict):
@@ -110,7 +109,6 @@ class ROIInterface:
 
     def check_for_selection(self, mouse_pos):
         """Check if mouse down on poly or poly vertex."""
-
         closest = ()
         mouse_pt = Point(mouse_pos)
 
@@ -249,38 +247,28 @@ class ROIInterface:
         self.rois.extend(new_rois)
 
     def drag_points(self, mouse_pos):
+        """Moves point being clicked on to mouse position."""
         ind = self.selected_polygon.lines.index(self.selected_polygon_vert)
 
-        # not the most elegant or efficient way to do this (keeping track of index would be better), but it means array of lines in roipoly can be rearranged without issue
+        # not the most elegant or efficient way to do this (keeping track of index would be better),
+        # but it means array of lines in roipoly can be rearranged without issue
         self.selected_polygon.lines[ind] = mouse_pos
         self.selected_polygon_vert = mouse_pos
 
         dpg.configure_item(self.selected_polygon.poly, points=self.selected_polygon.lines)
 
-    def find_future_pos(self, cursor_pos: tuple[int, int], centr: tuple[float, float]) -> tuple[float, float]:
+    def find_future_pos(self, cursor_pos: tuple[int, int], center: tuple[float, float]) -> tuple[float, float]:
         """
-        Intermediate calculations for finding the next point the shape will
-        be rotated to on the circle of positions that the currently selected
-        point could go to.
-
-        Parameters
-        ----------
-        cursor_pos : current mouse position
-        centr : center of the polygon being rotated
-
-        Returns
-        -------
-        future_v : future position on the circle of the selected vertex
-
-
+        If you rotate the clicked polygon vertex around the center of the polygon, you get a circle of
+        potential positions the polygon could be rotated to. This function finds the closest point
+        to the cursor position on that circle.
         """
 
-        # find closest point on the circle of potential vertex positions
-        curr_v = (cursor_pos[0]-centr[0], cursor_pos[1]-centr[1])
+        curr_v = (cursor_pos[0]-center[0], cursor_pos[1]-center[1])
         curr_mag_v = math.sqrt(
             curr_v[0]*curr_v[0] + curr_v[1]*curr_v[1])
-        radius = math.dist(centr, self.selected_polygon_vert)
-        future_v = (centr[0] + curr_v[0] / curr_mag_v * radius,
-                    centr[1] + curr_v[1] / curr_mag_v * radius)
+        radius = math.dist(center, self.selected_polygon_vert)
+        future_v = (center[0] + curr_v[0] / curr_mag_v * radius,
+                    center[1] + curr_v[1] / curr_mag_v * radius)
 
         return future_v

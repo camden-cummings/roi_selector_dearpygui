@@ -1,4 +1,3 @@
-""""""
 from pathlib import Path
 
 import cv2
@@ -20,7 +19,7 @@ class VideoGUI(GUI):
         self.frame_height = frame_height
 
         self.roi, self.line, self.roi_and_line_selection, self.post_line, self.state_manager = self.setup_elements(
-            filename, window)
+            window, filename)
 
     def open_file_callback(self, _, appdata: dict):
         self.vidcap = cv2.VideoCapture(appdata["file_path_name"])
@@ -60,16 +59,16 @@ class VideoGUI(GUI):
                     _ = self.vidcap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                     cont, curr_img = self.vidcap.read()
 
-            data = np.flip(curr_img, 2)
-            data = data.ravel()
-            data = np.asfarray(data, dtype='f')
-            texture_data = np.true_divide(data, 255.0)
+                data = np.flip(curr_img, 2)
+                data = data.ravel()
+                data = np.asfarray(data, dtype='f')
+                texture_data = np.true_divide(data, 255.0)
 
-            dpg.set_value("texture_tag", texture_data)
+                dpg.set_value("texture_tag", texture_data)
 
-            dpg.render_dearpygui_frame()
+                dpg.render_dearpygui_frame()
 
-    def setup_elements(self, filename, window):
+    def setup_elements(self, window, filename):
         state_manager = StateManager(window, self.frame_width, self.frame_height)
         self.setup_keypress(state_manager)
 

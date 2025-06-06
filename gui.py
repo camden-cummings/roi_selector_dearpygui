@@ -1,6 +1,6 @@
-""""""
 import dearpygui.dearpygui as dpg
 from statemanager import StateManager
+
 
 class GUI:
     """Sets and manages GUI elements - set up for line interface and ROI interface. """
@@ -172,6 +172,7 @@ class GUI:
                 key=dpg.mvKey_D, callback=state_manager.line_interface.right_callback)
 
     def setup_elements(self, window):
+        """"""
         state_manager = StateManager(window, self.frame_width, self.frame_height)
         self.setup_keypress(state_manager)
 
