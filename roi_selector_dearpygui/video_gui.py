@@ -5,7 +5,7 @@ import dearpygui.dearpygui as dpg
 import numpy as np
 
 from gui import GUI
-from helpers import update_frame_shape
+from interfaces.helpers import update_frame_shape
 from statemanager import StateManager
 
 

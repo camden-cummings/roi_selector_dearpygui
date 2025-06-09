@@ -2,7 +2,7 @@
 import dearpygui.dearpygui as dpg
 import numpy as np
 
-from gui import GUI
+from roi_selector_dearpygui.gui import GUI
 
 dpg.create_context()
 

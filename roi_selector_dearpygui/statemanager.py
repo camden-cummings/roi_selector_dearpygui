@@ -1,9 +1,9 @@
 import dearpygui.dearpygui as dpg
 
-from lineinterface import LineInterface
+from interfaces.lineinterface import LineInterface
 from roi_generation import generate_rois
-from roiinterface import ROIInterface
-from roipoly import RoiPoly
+from interfaces.roiinterface import ROIInterface
+from interfaces.roipoly import RoiPoly
 
 
 class StateManager:
