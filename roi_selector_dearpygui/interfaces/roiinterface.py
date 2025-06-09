@@ -5,8 +5,8 @@ import dearpygui.dearpygui as dpg
 import numpy as np
 from shapely.geometry import Point, Polygon
 
-from interfaces.helpers import get_mouse_pos
-from interfaces.roipoly import RoiPoly
+from roi_selector_dearpygui.interfaces.helpers import get_mouse_pos
+from roi_selector_dearpygui.interfaces.roipoly import RoiPoly
 
 
 class ROIInterface:
@@ -143,7 +143,7 @@ class ROIInterface:
                 return roi
         return None
 
-    def copy(self):
+    def copy_callback(self):
         """Copy hovered ROI."""
         roi = self.check_for_hover()
 
@@ -152,13 +152,29 @@ class ROIInterface:
                               self.frame_height, lines=roi.lines)
             self.rois.append(new_roi)
 
-    def delete(self):
+    def delete_callback(self):
         """Delete hovered ROI."""
         roi = self.check_for_hover()
 
         if roi is not None:
             dpg.delete_item(roi.poly)
             self.rois.remove(roi)
+
+    def up_callback(self):
+        for roi in self.rois:
+            roi.set_lines([[line[0], line[1]-2] for line in roi.lines])
+
+    def left_callback(self):
+        for roi in self.rois:
+            roi.set_lines([[line[0]-2, line[1]] for line in roi.lines])
+
+    def down_callback(self):
+        for roi in self.rois:
+            roi.set_lines([[line[0], line[1]+2] for line in roi.lines])
+
+    def right_callback(self):
+        for roi in self.rois:
+            roi.set_lines([[line[0]+2, line[1]] for line in roi.lines])
 
     def move(self):
         """Move polygon to current mouse position."""

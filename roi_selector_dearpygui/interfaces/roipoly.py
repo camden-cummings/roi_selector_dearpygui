@@ -1,7 +1,7 @@
 import dearpygui.dearpygui as dpg
 from shapely.geometry import Polygon
 
-from interfaces.helpers import get_mouse_pos
+from roi_selector_dearpygui.interfaces.helpers import get_mouse_pos
 
 
 class RoiPoly:
@@ -35,6 +35,11 @@ class RoiPoly:
     def finish_roi(self):
         """Last steps to finish ROI."""
         self.area = Polygon(self.lines).area
+
+    def set_lines(self, new_lines):
+        self.lines = new_lines
+        dpg.configure_item(self.poly,
+                           points=new_lines)
 
     def left_mouse_press_callback(self):
         """Add new vertex to the polygon."""

@@ -4,7 +4,7 @@ import re
 
 import dearpygui.dearpygui as dpg
 
-from interfaces.helpers import get_mouse_pos, convert_to_in_bounds
+from roi_selector_dearpygui.interfaces.helpers import get_mouse_pos, convert_to_in_bounds
 
 
 class LineInterface:

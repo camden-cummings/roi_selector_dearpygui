@@ -1,9 +1,9 @@
 import dearpygui.dearpygui as dpg
 
-from interfaces.lineinterface import LineInterface
-from roi_generation import generate_rois
-from interfaces.roiinterface import ROIInterface
-from interfaces.roipoly import RoiPoly
+from roi_selector_dearpygui.interfaces.lineinterface import LineInterface
+from roi_selector_dearpygui.roi_generation import generate_rois
+from roi_selector_dearpygui.interfaces.roiinterface import ROIInterface
+from roi_selector_dearpygui.interfaces.roipoly import RoiPoly
 
 
 class StateManager:
@@ -113,9 +113,9 @@ class StateManager:
     def copy_callback(self, _, __):
         """Callback from copy (ctrl+c) pressed, decides if a line or ROI should be copied."""
         if self.ROI_mode_selected and self.ctrl_has_been_pressed:
-            self.roi_interface.copy()
+            self.roi_interface.copy_callback()
         else:
-            self.line_interface.copy()
+            self.line_interface.copy_callback()
 
         self.ctrl_has_been_pressed = False
 
@@ -125,6 +125,30 @@ class StateManager:
     def delete_callback(self, _, __):
         """If delete button pressed, delete either hovered ROI or line, depending on mode."""
         if self.ROI_mode_selected:
-            self.roi_interface.delete()
+            self.roi_interface.delete_callback()
         else:
-            self.line_interface.delete()
+            self.line_interface.delete_callback()
+
+    def up_callback(self):
+        if self.ROI_mode_selected:
+            self.roi_interface.up_callback()
+        else:
+            self.line_interface.up_callback()
+
+    def left_callback(self):
+        if self.ROI_mode_selected:
+            self.roi_interface.left_callback()
+        else:
+            self.line_interface.left_callback()
+
+    def down_callback(self):
+        if self.ROI_mode_selected:
+            self.roi_interface.down_callback()
+        else:
+            self.line_interface.down_callback()
+
+    def right_callback(self):
+        if self.ROI_mode_selected:
+            self.roi_interface.right_callback()
+        else:
+            self.line_interface.right_callback()

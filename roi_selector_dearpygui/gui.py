@@ -1,5 +1,5 @@
 import dearpygui.dearpygui as dpg
-from statemanager import StateManager
+from roi_selector_dearpygui.statemanager import StateManager
 
 
 class GUI:
@@ -61,11 +61,13 @@ class GUI:
             dpg.add_button(label="Save ROIs",
                            callback=lambda: dpg.show_item("roi_save_file"))
 
+            """
             dpg.add_button(label="Clear Screen and Start Over", pos=[
                            shift, down_shift+95], callback=state_manager.clear_window)
             dpg.add_text(
                 "NOTES \nclick and hold the edge of a ROI to rotate it \n\nSHORTCUTS \n ctrl+c: copy \n del: delete",
                 pos=(shift+5, down_shift+115), wrap=150)
+            """
 
         return roi
 
@@ -97,12 +99,6 @@ class GUI:
             dpg.add_button(label="Load Line Configuration",
                            callback=lambda: dpg.show_item("line_load_file"))
 
-            dpg.add_button(label="Clear Screen and Start Over", pos=[
-                           shift, down_shift+123], callback=state_manager.clear_window)
-            dpg.add_text(
-                "NOTES \nclick and hold the edge of a ROI to rotate it \n\nSHORTCUTS \n ctrl+c: copy \n del: delete \n WASD: move all lines",
-                pos=(shift+5, down_shift+140), wrap=150)
-
         return line
 
     def setup_post_line_buttons(self, shift, down_shift, state_manager, curr_dir, curr_name, max_roi_area):
@@ -115,8 +111,10 @@ class GUI:
             dpg.add_button(label="Save ROIs",
                            callback=lambda: dpg.show_item("roi_post_save_file"))
 
+            """
             dpg.add_button(label="Clear Screen and Start Over",
                            callback=self.restart)
+            """
 
             dpg.add_slider_double(
                 height=150,
@@ -163,13 +161,13 @@ class GUI:
             dpg.add_key_press_handler(
                 key=dpg.mvKey_Delete, callback=state_manager.delete_callback)
             dpg.add_key_press_handler(
-                key=dpg.mvKey_W, callback=state_manager.line_interface.up_callback)
+                key=dpg.mvKey_W, callback=state_manager.up_callback)
             dpg.add_key_press_handler(
-                key=dpg.mvKey_A, callback=state_manager.line_interface.left_callback)
+                key=dpg.mvKey_A, callback=state_manager.left_callback)
             dpg.add_key_press_handler(
-                key=dpg.mvKey_S, callback=state_manager.line_interface.down_callback)
+                key=dpg.mvKey_S, callback=state_manager.down_callback)
             dpg.add_key_press_handler(
-                key=dpg.mvKey_D, callback=state_manager.line_interface.right_callback)
+                key=dpg.mvKey_D, callback=state_manager.right_callback)
 
     def setup_elements(self, window):
         """"""
