@@ -26,9 +26,9 @@ class RoiPoly:
         self.shift = shift
 
         if lines is not None:
-            self.lines = lines
             self.completed = True
             self.finish_roi()
+            self.lines = lines
             self.poly = dpg.draw_polyline(points=self.lines, color=(
                 255, 0, 0, 255), thickness=1, parent=self.window, closed=True)
 

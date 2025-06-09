@@ -191,9 +191,7 @@ class ROIInterface:
             elif point[1] > self.shift[1]+self.frame_height or self.shift[1] > point[1]:
                 break
         else:
-            self.drag_polygon.lines = translated_poly
-            dpg.configure_item(self.drag_polygon.poly,
-                               points=self.drag_polygon.lines)
+            self.drag_polygon.set_lines(translated_poly)
 
     def rotate(self, angle):
         """Rotate polygon to angle."""
@@ -207,9 +205,7 @@ class ROIInterface:
 
         rotated_poly = rotated_poly.tolist()
 
-        self.selected_polygon.lines = rotated_poly
-        dpg.configure_item(self.selected_polygon.poly,
-                           points=self.selected_polygon.lines)
+        self.selected_polygon.set_lines(rotated_poly)
 
     def adjust_points_to_in_bounds(self, polygon):
         """Naive algorithm to move points back inside bounds of frame."""
