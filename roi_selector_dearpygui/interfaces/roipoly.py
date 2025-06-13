@@ -27,10 +27,10 @@ class RoiPoly:
 
         if lines is not None:
             self.completed = True
-            self.finish_roi()
             self.lines = lines
             self.poly = dpg.draw_polyline(points=self.lines, color=(
                 255, 0, 0, 255), thickness=1, parent=self.window, closed=True)
+            self.finish_roi()
 
     def finish_roi(self):
         """Last steps to finish ROI."""

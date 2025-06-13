@@ -122,9 +122,9 @@ class LineInterface:
         dr_y = config_dict["p"+str(self.drag_point)][1]
 
         moving_vert = dr_y < self.shift[1] + \
-            5 or abs(dr_y - abs(self.frame_height+self.shift[1])) < 5
+            self.hypotenuse/500 or abs(dr_y - abs(self.frame_height+self.shift[1])) < self.hypotenuse/500
         moving_hor = dr_x < self.shift[0] + \
-            5 or abs(dr_x - self.frame_width+self.shift[0]) < 5
+            self.hypotenuse/500 or abs(dr_x - self.frame_width+self.shift[0]) < self.hypotenuse/500
 
         if moving_vert and moving_hor:
             moving_hor, moving_vert = self.last

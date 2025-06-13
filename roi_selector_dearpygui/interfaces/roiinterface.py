@@ -19,12 +19,17 @@ class ROIInterface:
         self.prev = None
         self.drag_polygon = None
         self.dragging_points = False
-        self.frame_width = frame_width
-        self.frame_height = frame_height
         self.window = window
         self.allowed_area_min = 0.0
-        self.allowed_area_max = self.frame_width*self.frame_height
         self.shift = shift
+
+        self.frame_width = frame_width
+        self.frame_height = frame_height
+
+        self.allowed_area_max = self.frame_width*self.frame_height
+
+        self.hypotenuse = math.sqrt(
+            math.pow(self.frame_width, 2) + math.pow(self.frame_height, 2))
 
     def left_mouse_press_callback(self):
         """When mouse clicked, checks if current mouse position is near to a polygon or a polygon vertex."""
@@ -121,7 +126,7 @@ class ROIInterface:
             for point in poly.lines:
                 dist = math.dist(point, mouse_pos)
 
-                if dist < 40:  # if
+                if dist < self.hypotenuse/50:  # if
                     if closest:
                         if dist < closest[1]:
                             closest = ((poly, point), dist)
@@ -162,19 +167,19 @@ class ROIInterface:
 
     def up_callback(self):
         for roi in self.rois:
-            roi.set_lines([[line[0], line[1]-2] for line in roi.lines])
+            roi.set_lines([[line[0], line[1]-int(self.hypotenuse/1000)] for line in roi.lines])
 
     def left_callback(self):
         for roi in self.rois:
-            roi.set_lines([[line[0]-2, line[1]] for line in roi.lines])
+            roi.set_lines([[line[0]-int(self.hypotenuse/1000), line[1]] for line in roi.lines])
 
     def down_callback(self):
         for roi in self.rois:
-            roi.set_lines([[line[0], line[1]+2] for line in roi.lines])
+            roi.set_lines([[line[0], line[1]+int(self.hypotenuse/1000)] for line in roi.lines])
 
     def right_callback(self):
         for roi in self.rois:
-            roi.set_lines([[line[0]+2, line[1]] for line in roi.lines])
+            roi.set_lines([[line[0]+int(self.hypotenuse/1000), line[1]] for line in roi.lines])
 
     def move(self):
         """Move polygon to current mouse position."""
@@ -257,6 +262,18 @@ class ROIInterface:
                 RoiPoly(self.window, self.frame_width, self.frame_height, self.shift, poly_lines))
 
         self.rois.extend(new_rois)
+
+    def make_rois_from_contours(self, contours: list):
+        """Make an ROIPoly object for each contour in contours."""
+        rois = []
+        for i in range(len(contours)):
+            n_l = [[int(j[0]+self.shift[0]), int(j[1]+self.shift[1])]
+                   for j in contours[i]]
+            roi = RoiPoly(self.window, self.frame_width,
+                          self.frame_height, self.shift, lines=n_l)
+            roi.finish_roi()
+            rois.append(roi)
+        return rois
 
     def drag_points(self, mouse_pos):
         """Moves point being clicked on to mouse position."""

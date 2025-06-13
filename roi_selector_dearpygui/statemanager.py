@@ -83,20 +83,8 @@ class StateManager:
 
         self.line_interface.lines.clear()
 
-        self.roi_interface.rois.extend(self.make_rois(shortened_contours))
+        self.roi_interface.rois.extend(self.roi_interface.make_rois(shortened_contours))
         self.ROI_mode_selected = True
-
-    def make_rois(self, shortened_contours: list):
-        """Make an ROIPoly object for each contour in shortened_contours."""
-        rois = []
-        for i in range(len(shortened_contours)):
-            n_l = [[int(j[0]+self.shift[0]), int(j[1]+self.shift[1])]
-                   for j in shortened_contours[i]]
-            roi = RoiPoly(self.window, self.frame_width,
-                          self.frame_height, self.shift, lines=n_l)
-            roi.finish_roi()
-            rois.append(roi)
-        return rois
 
     def clear_window(self):
         """Clears window of all ROIs and lines."""
