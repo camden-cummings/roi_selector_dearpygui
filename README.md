@@ -1,12 +1,15 @@
 ## About The Project
 
-ROI and line selection of ROIs using DearPyGUI and Python. Can be overlayed on top of images, videos, or live camera feeds.
+GUI for selection of ROIs using DearPyGUI and Python; can be overlayed on top of images, videos, or live camera feeds. Also defines methods for interacting with ROIs (i.e. dragging, rotating). 
 
-<!-- ROI Selection Screenshot -->
+<!-- ROI Selection -->
 
 ![ROI Selection Image](roiselection.png)
 
-<!-- Line Selection Screenshot -->
+
+<!-- Line Selection -->
+
+Line interface is used to define a set of lines and create ROIs based on them, as shown.
 
 ![Line Selection Image](lineselection.png)
 
