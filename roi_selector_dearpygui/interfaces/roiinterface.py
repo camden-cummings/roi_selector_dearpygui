@@ -12,7 +12,14 @@ from roi_selector_dearpygui.interfaces.roipoly import RoiPoly
 class ROIInterface:
     """Defines useful methods for interacting with (moving, rotating) polygons."""
 
-    def __init__(self, window, frame_width, frame_height, shift=(0, 0)):
+    def __init__(self, window, frame_width: int, frame_height: int, shift=(0, 0)):
+        """
+
+        :param window:
+        :param frame_width:
+        :param frame_height:
+        :param shift:
+        """
         self.rois = []
         self.selected_polygon = None
         self.selected_polygon_vert = None
@@ -48,7 +55,7 @@ class ROIInterface:
             self.selected_polygon = None
         self.prev = None
 
-    def roi_slider_size_callback_min(self, _, allowed_area):
+    def roi_slider_size_callback_min(self, _, allowed_area: int):
         """Shows or hides ROIs based on value of allowed area."""
         self.allowed_area_min = allowed_area
 
@@ -58,7 +65,7 @@ class ROIInterface:
             else:
                 dpg.show_item(roi.poly)
 
-    def roi_slider_size_callback_max(self, _, allowed_area):
+    def roi_slider_size_callback_max(self, _, allowed_area: int):
         """Shows or hides ROIs based on value of allowed area."""
         self.allowed_area_max = allowed_area
 
@@ -112,17 +119,12 @@ class ROIInterface:
 
         self.convert_np_array_to_rois(lines)
 
-    def check_for_selection(self, mouse_pos):
+    def check_for_selection(self, mouse_pos: tuple[float, float]):
         """Check if mouse down on poly or poly vertex."""
         closest = ()
         mouse_pt = Point(mouse_pos)
 
         for poly in self.rois:
-            n_poly = Polygon(poly.lines)
-
-            if mouse_pt.within(n_poly):
-                self.drag_polygon = poly
-
             for point in poly.lines:
                 dist = math.dist(point, mouse_pos)
 
@@ -132,6 +134,12 @@ class ROIInterface:
                             closest = ((poly, point), dist)
                     else:
                         closest = ((poly, point), dist)
+
+            if not closest:
+                n_poly = Polygon(poly.lines)
+
+                if mouse_pt.within(n_poly):
+                    self.drag_polygon = poly
 
         if closest:
             self.selected_polygon = closest[0][0]
@@ -198,7 +206,7 @@ class ROIInterface:
         else:
             self.drag_polygon.set_lines(translated_poly)
 
-    def rotate(self, angle):
+    def rotate(self, angle: float):
         """Rotate polygon to angle."""
         poly = self.selected_polygon.lines
         centr = Polygon(poly).centroid
@@ -235,7 +243,7 @@ class ROIInterface:
             dpg.configure_item(polygon.poly,
                                points=polygon.lines)
 
-    def convert_rois_to_np_array(self, rois):
+    def convert_rois_to_np_array(self, rois: list[RoiPoly]):
         """Converts all ROIPolys to numpy arrays."""
         lines = []
         for roi in rois:
@@ -248,7 +256,7 @@ class ROIInterface:
             lines.append(poly)
         return lines
 
-    def convert_np_array_to_rois(self, lines):
+    def convert_np_array_to_rois(self, lines: list[np.ndarray]):
         """Converts numpy arrays to ROIPolys."""
         new_rois = []
         for line in lines:
@@ -263,7 +271,7 @@ class ROIInterface:
 
         self.rois.extend(new_rois)
 
-    def make_rois_from_contours(self, contours: list):
+    def make_rois_from_contours(self, contours: list[RoiPoly]):
         """Make an ROIPoly object for each contour in contours."""
         rois = []
         for i in range(len(contours)):
@@ -275,7 +283,7 @@ class ROIInterface:
             rois.append(roi)
         return rois
 
-    def drag_points(self, mouse_pos):
+    def drag_points(self, mouse_pos: tuple[int, int]):
         """Moves point being clicked on to mouse position."""
         ind = self.selected_polygon.lines.index(self.selected_polygon_vert)
 

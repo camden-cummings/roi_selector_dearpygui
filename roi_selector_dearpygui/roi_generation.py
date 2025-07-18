@@ -5,7 +5,7 @@ import dearpygui.dearpygui as dpg
 import numpy as np
 
 
-def generate_rois(lines, frame_height, frame_width, shift):
+def generate_rois(lines: list[list], frame_height: int, frame_width: int, shift: tuple[int, int]):
     """Creates ROIs from set of lines."""
     formatted_lines = []
 
@@ -17,7 +17,7 @@ def generate_rois(lines, frame_height, frame_width, shift):
 
     for c1 in corners:
         for c2 in corners:
-            # all possible borders of screen
+            # get all possible borders of screen
             if c1 != c2 and (c1[0] == c2[0] or c1[1] == c2[1]) and [c2, c1] not in formatted_lines:
                 formatted_lines.append([tuple(c1), tuple(c2)])
 
@@ -25,6 +25,8 @@ def generate_rois(lines, frame_height, frame_width, shift):
         config_dict = dpg.get_item_configuration(line)
         point1 = [int(i) for i in config_dict["p1"]]
         point2 = [int(i) for i in config_dict["p2"]]
+
+        # standardizing relative to an origin @ (0,0)
         point1[0] -= shift[0]
         point1[1] -= shift[1]
         point2[0] -= shift[0]

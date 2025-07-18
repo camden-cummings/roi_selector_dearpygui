@@ -61,14 +61,6 @@ class GUI:
             dpg.add_button(label="Save ROIs",
                            callback=lambda: dpg.show_item("roi_save_file"))
 
-            """
-            dpg.add_button(label="Clear Screen and Start Over", pos=[
-                           shift, down_shift+95], callback=state_manager.clear_window)
-            dpg.add_text(
-                "NOTES \nclick and hold the edge of a ROI to rotate it \n\nSHORTCUTS \n ctrl+c: copy \n del: delete",
-                pos=(shift+5, down_shift+115), wrap=150)
-            """
-
         return roi
 
     def setup_line_buttons(self, shift, down_shift, state_manager):
@@ -110,11 +102,6 @@ class GUI:
 
             dpg.add_button(label="Save ROIs",
                            callback=lambda: dpg.show_item("roi_post_save_file"))
-
-            """
-            dpg.add_button(label="Clear Screen and Start Over",
-                           callback=self.restart)
-            """
 
             dpg.add_slider_double(
                 height=150,
@@ -175,6 +162,8 @@ class GUI:
         self.setup_keypress(state_manager)
 
         with dpg.child_window(border=False, parent=window):
+            down_shift = 75
+
             with dpg.group() as roi_and_line_selection:
                 shift = self.frame_width + 10
 
@@ -188,5 +177,11 @@ class GUI:
 
             post_line = self.setup_post_line_buttons(shift, 0, state_manager, "", "", self.frame_width*self.frame_height)
             dpg.hide_item(post_line)
+
+            dpg.add_button(label="Clear Screen and Start Over", pos=[
+                shift, down_shift + 123], callback=state_manager.clear_window)
+            dpg.add_text(
+                "NOTES \nclick and hold the edge of a ROI to rotate it \n\nSHORTCUTS \n ctrl+c: copy \n del: delete \n WASD: move all lines",
+                pos=(shift + 5, down_shift + 140), wrap=150)
 
         return roi, line, roi_and_line_selection, post_line, state_manager

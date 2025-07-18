@@ -1,3 +1,4 @@
+"""Redirects callbacks to appropriate class."""
 import dearpygui.dearpygui as dpg
 
 from roi_selector_dearpygui.interfaces.lineinterface import LineInterface
@@ -7,9 +8,14 @@ from roi_selector_dearpygui.interfaces.roipoly import RoiPoly
 
 
 class StateManager:
-    """Makes sure in correct state when necessary."""
+    def __init__(self, window, frame_width: int, frame_height: int, shift=(0, 0)):
+        """
 
-    def __init__(self, window, frame_width, frame_height, shift=(0, 0)):
+        :param window:
+        :param frame_width:
+        :param frame_height:
+        :param shift:
+        """
         self.inactive = True
         self.current_roi = None
         self.ROI_mode_selected = True
@@ -39,7 +45,7 @@ class StateManager:
             self.current_roi.left_mouse_press_callback()
 
     def right_mouse_press_callback(self):
-        """Finishes the currently unfinished ROI, if there is one."""
+        """Finishes the currently unfinished ROI, if there is one. When completed, adds to list of current completed ROIs to be managed by ROI_interface."""
         if not self.inactive:
             self.current_roi.right_mouse_press_callback()
 
@@ -49,7 +55,7 @@ class StateManager:
                 self.current_roi = None
 
     def motion_notify_callback(self):
-        """When mouse is moving, sends to appropriate method."""
+        """When mouse is moving."""
         if self.inactive and self.ROI_mode_selected and len(self.roi_interface.rois) > 0:
             self.roi_interface.motion_notify_callback()
         elif not self.ROI_mode_selected:
@@ -58,7 +64,7 @@ class StateManager:
             self.current_roi.motion_notify_callback()
 
     def new_roi(self):
-        """Create new ROI and add to ROIInterface."""
+        """Starts new ROI which will only be completed when right mouse press event occurs."""
         if self.current_roi is not None and not self.current_roi.completed:
             dpg.configure_item(self.current_roi, points=[])
 
@@ -83,7 +89,7 @@ class StateManager:
 
         self.line_interface.lines.clear()
 
-        self.roi_interface.rois.extend(self.roi_interface.make_rois(shortened_contours))
+        self.roi_interface.rois.extend(self.roi_interface.make_rois_from_contours(shortened_contours))
         self.ROI_mode_selected = True
 
     def clear_window(self):
@@ -118,24 +124,28 @@ class StateManager:
             self.line_interface.delete_callback()
 
     def up_callback(self):
+        """When up or W key pressed."""
         if self.ROI_mode_selected:
             self.roi_interface.up_callback()
         else:
             self.line_interface.up_callback()
 
     def left_callback(self):
+        """When left or A key pressed."""
         if self.ROI_mode_selected:
             self.roi_interface.left_callback()
         else:
             self.line_interface.left_callback()
 
     def down_callback(self):
+        """When down or D key pressed."""
         if self.ROI_mode_selected:
             self.roi_interface.down_callback()
         else:
             self.line_interface.down_callback()
 
     def right_callback(self):
+        """When right or D key pressed."""
         if self.ROI_mode_selected:
             self.roi_interface.right_callback()
         else:

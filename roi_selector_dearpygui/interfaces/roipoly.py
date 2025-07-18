@@ -1,5 +1,6 @@
 import dearpygui.dearpygui as dpg
 from shapely.geometry import Polygon
+import numpy as np
 
 from roi_selector_dearpygui.interfaces.helpers import get_mouse_pos
 
@@ -7,7 +8,15 @@ from roi_selector_dearpygui.interfaces.helpers import get_mouse_pos
 class RoiPoly:
     """Defines point-by-point selected polygon."""
 
-    def __init__(self, window, frame_width, frame_height, shift=(0, 0), lines=None):
+    def __init__(self, window, frame_width: int, frame_height: int, shift=(0, 0), lines=None):
+        """
+
+        :param window:
+        :param frame_width:
+        :param frame_height:
+        :param shift:
+        :param lines:
+        """
         self.line = None
         self.lines = []
         self.poly = None
@@ -36,7 +45,7 @@ class RoiPoly:
         """Last steps to finish ROI."""
         self.area = Polygon(self.lines).area
 
-    def set_lines(self, new_lines):
+    def set_lines(self, new_lines: np.ndarray):
         self.lines = new_lines
         dpg.configure_item(self.poly,
                            points=new_lines)

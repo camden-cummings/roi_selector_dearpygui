@@ -10,7 +10,14 @@ from roi_selector_dearpygui.interfaces.helpers import get_mouse_pos, convert_to_
 class LineInterface:
     """Allows manipulating of lines going from top to bottom of given window, and creation of poly based on that."""
 
-    def __init__(self, window, frame_width, frame_height, shift=(0, 0)):
+    def __init__(self, window, frame_width: int, frame_height: int, shift=(0, 0)):
+        """
+
+        :param window:
+        :param frame_width:
+        :param frame_height:
+        :param shift:
+        """
         self.lines = []
 
         self.drag_point = None
@@ -81,12 +88,12 @@ class LineInterface:
         self.drag_line = None
         self.middle_drag_line = None
 
-    def num_of_vert_lines_changer(self, _, data):
+    def num_of_vert_lines_changer(self, _, data: str):
         """Keep desired number of vertical lines updated as it is changed in text box."""
         self.vert_lines = int(data) if re.search(
             r'^\d*$', data) and len(data) > 0 else self.vert_lines
 
-    def num_of_hor_lines_changer(self, _, data):
+    def num_of_hor_lines_changer(self, _, data: str):
         """Keep desired number of vertical lines updated as it is changed in text box."""
         self.hor_lines = int(data) if re.search(
             r'^\d*$', data) and len(data) > 0 else self.hor_lines
@@ -278,7 +285,7 @@ class LineInterface:
 
             pickle.dump(new_lines, filename)
 
-    def move_lines_incremented(self, dx, dy):
+    def move_lines_incremented(self, dx: int, dy: int):
         """Moves every line by dx, dy, while keeping within bounds of set canvas."""
         for line in self.lines:
             config_dict = dpg.get_item_configuration(line)
