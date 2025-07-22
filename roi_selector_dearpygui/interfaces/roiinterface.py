@@ -289,8 +289,8 @@ class ROIInterface:
 
         # not the most elegant or efficient way to do this (keeping track of index would be better),
         # but it means array of lines in roipoly can be rearranged without issue
-        self.selected_polygon.lines[ind] = mouse_pos
-        self.selected_polygon_vert = mouse_pos
+        self.selected_polygon.lines[ind] = list(mouse_pos)
+        self.selected_polygon_vert = list(mouse_pos)
 
         dpg.configure_item(self.selected_polygon.poly, points=self.selected_polygon.lines)
 
