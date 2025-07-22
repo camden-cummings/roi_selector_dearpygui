@@ -4,9 +4,9 @@ import cv2
 import dearpygui.dearpygui as dpg
 import numpy as np
 
-from roi_selector_dearpygui.gui import GUI
-from roi_selector_dearpygui.interfaces.helpers import update_frame_shape
-from roi_selector_dearpygui.statemanager import StateManager
+from .gui import GUI
+from .interfaces.helpers import update_frame_shape
+from .statemanager import StateManager
 
 
 class VideoGUI(GUI):

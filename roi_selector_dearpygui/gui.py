@@ -1,5 +1,5 @@
 import dearpygui.dearpygui as dpg
-from roi_selector_dearpygui.statemanager import StateManager
+from .statemanager import StateManager
 
 
 class GUI:

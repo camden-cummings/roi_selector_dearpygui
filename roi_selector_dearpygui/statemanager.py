@@ -1,11 +1,7 @@
 """Redirects callbacks to appropriate class."""
 import dearpygui.dearpygui as dpg
 
-from roi_selector_dearpygui.interfaces.lineinterface import LineInterface
-from roi_selector_dearpygui.roi_generation import generate_rois
-from roi_selector_dearpygui.interfaces.roiinterface import ROIInterface
-from roi_selector_dearpygui.interfaces.roipoly import RoiPoly
-
+from .interfaces import *
 
 class StateManager:
     def __init__(self, window, frame_width: int, frame_height: int, shift=(0, 0)):
