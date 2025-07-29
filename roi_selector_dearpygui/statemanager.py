@@ -2,6 +2,7 @@
 import dearpygui.dearpygui as dpg
 
 from .interfaces import *
+from .roi_generation import generate_rois
 
 class StateManager:
     def __init__(self, window, frame_width: int, frame_height: int, shift=(0, 0)):
@@ -12,7 +13,8 @@ class StateManager:
         :param frame_height:
         :param shift:
         """
-        self.inactive = True
+        self.inactive = True #TODO name this something more meaningful
+        self.disable = False
         self.current_roi = None
         self.ROI_mode_selected = True
         self.ctrl_has_been_pressed = False
@@ -29,35 +31,38 @@ class StateManager:
 
     def left_mouse_press_callback(self):
         """When left mouse pressed, sends to appropriate method."""
-        if self.inactive and len(self.roi_interface.rois) > 0 and self.ROI_mode_selected:
-            # selecting completed ROIs
-            self.roi_interface.left_mouse_press_callback()
-        elif not self.ROI_mode_selected:
-            # selecting lines
-            self.line_interface.left_mouse_press_callback()
-        elif not self.inactive:
-            # there's an ROI that has not been completed,
-            # so the left mouse press means a new vertex for the ROI
-            self.current_roi.left_mouse_press_callback()
+        if not self.disable:
+            if self.inactive and len(self.roi_interface.rois) > 0 and self.ROI_mode_selected:
+                # selecting completed ROIs
+                self.roi_interface.left_mouse_press_callback()
+            elif not self.ROI_mode_selected:
+                # selecting lines
+                self.line_interface.left_mouse_press_callback()
+            elif not self.inactive:
+                # there's an ROI that has not been completed,
+                # so the left mouse press means a new vertex for the ROI
+                self.current_roi.left_mouse_press_callback()
 
     def right_mouse_press_callback(self):
         """Finishes the currently unfinished ROI, if there is one. When completed, adds to list of current completed ROIs to be managed by ROI_interface."""
-        if not self.inactive:
-            self.current_roi.right_mouse_press_callback()
-
-            if self.current_roi.completed:
-                self.roi_interface.rois.append(self.current_roi)
-                self.inactive = True
-                self.current_roi = None
+        if not self.disable:
+            if not self.inactive:
+                self.current_roi.right_mouse_press_callback()
+    
+                if self.current_roi.completed:
+                    self.roi_interface.rois.append(self.current_roi)
+                    self.inactive = True
+                    self.current_roi = None
 
     def motion_notify_callback(self):
         """When mouse is moving."""
-        if self.inactive and self.ROI_mode_selected and len(self.roi_interface.rois) > 0:
-            self.roi_interface.motion_notify_callback()
-        elif not self.ROI_mode_selected:
-            self.line_interface.motion_notify_callback()
-        elif not self.inactive:
-            self.current_roi.motion_notify_callback()
+        if not self.disable:
+            if self.inactive and self.ROI_mode_selected and len(self.roi_interface.rois) > 0:
+                self.roi_interface.motion_notify_callback()
+            elif not self.ROI_mode_selected:
+                self.line_interface.motion_notify_callback()
+            elif not self.inactive:
+                self.current_roi.motion_notify_callback()
 
     def new_roi(self):
         """Starts new ROI which will only be completed when right mouse press event occurs."""
@@ -70,10 +75,11 @@ class StateManager:
 
     def release_callback(self):
         """When mouse is released, send to either ROI or line interface based on mode."""
-        if self.inactive and len(self.roi_interface.rois) > 0 and self.ROI_mode_selected:
-            self.roi_interface.left_mouse_release_callback()
-        elif not self.ROI_mode_selected:
-            self.line_interface.left_mouse_release_callback()
+        if not self.disable:
+            if self.inactive and len(self.roi_interface.rois) > 0 and self.ROI_mode_selected:
+                self.roi_interface.left_mouse_release_callback()
+            elif not self.ROI_mode_selected:
+                self.line_interface.left_mouse_release_callback()
 
     def generate_rois_callback(self):
         """Creates list of ROIs based on lines."""
@@ -99,6 +105,7 @@ class StateManager:
             dpg.delete_item(roi.poly)
 
         self.roi_interface.rois.clear()
+        self.ROI_mode_selected = False
 
     def copy_callback(self, _, __):
         """Callback from copy (ctrl+c) pressed, decides if a line or ROI should be copied."""

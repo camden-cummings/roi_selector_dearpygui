@@ -179,9 +179,9 @@ class GUI:
             dpg.hide_item(post_line)
 
             dpg.add_button(label="Clear Screen and Start Over", pos=[
-                shift, down_shift + 123], callback=state_manager.clear_window)
+                shift, down_shift + 123], callback=self.restart)
             dpg.add_text(
-                "NOTES \nclick and hold the edge of a ROI to rotate it \n\nSHORTCUTS \n ctrl+c: copy \n del: delete \n WASD: move all lines",
+                "NOTES \nclick and hold the edge of a ROI to rotate it \n\nSHORTCUTS \n ctrl+c: copy \n del: delete \n WASD: move all lines/ROIs \n to track using lines, you must click 'Generate ROIs' before your regions will be accepted \n saving is only necessary to use the same ROIs over multiple sessions",
                 pos=(shift + 5, down_shift + 140), wrap=150)
 
         return roi, line, roi_and_line_selection, post_line, state_manager

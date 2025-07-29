@@ -98,19 +98,19 @@ class LineInterface:
         self.hor_lines = int(data) if re.search(
             r'^\d*$', data) and len(data) > 0 else self.hor_lines
 
-    def up_callback(self, _, __):
+    def up_callback(self):
         """Moves all lines up."""
         self.move_lines_incremented(0, 1)
 
-    def left_callback(self, _, __):
+    def left_callback(self):
         """Moves all lines left."""
         self.move_lines_incremented(1, 0)
 
-    def down_callback(self, _, __):
+    def down_callback(self):
         """Move all lines down."""
         self.move_lines_incremented(0, -1)
 
-    def right_callback(self, _, __):
+    def right_callback(self):
         """Move all lines right."""
         self.move_lines_incremented(-1, 0)
 
@@ -257,7 +257,7 @@ class LineInterface:
                 255, 0, 0, 255), parent=self.window)
             self.lines.append(copied_line)
 
-    def delete(self):
+    def delete_callback(self):
         """Delete line being hovered over."""
         _, hovered_line = self.check_for_hover()
         if hovered_line != -1:  # if no line being hovered, we can't delete
