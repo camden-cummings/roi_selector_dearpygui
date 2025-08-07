@@ -8,7 +8,7 @@ import dearpygui.dearpygui as dpg
 from roi_selector_dearpygui.interfaces.helpers import get_shape
 from roi_selector_dearpygui.video_gui import VideoGUI
 
-def find_all_videos_for_tracking(path=None, ext="avi"):
+def find_all_videos_for_tracking(path=None, dates=None, ext="avi"):
     """
     Finds all avi files in current working directory, if path given finds all
     avi files in path that aren't output of the algorithm.
@@ -27,12 +27,21 @@ def find_all_videos_for_tracking(path=None, ext="avi"):
             fn_ext = fn.split('.')[-1]
 
             if fn_ext == ext:
-                files_to_read.append(ex[0] + "/" + fn)
+                if dates is None:
+                    files_to_read.append(ex[0] + "/" + fn)
+                else:
+                    for d in dates:
+                        if d in fn:
+                            files_to_read.append(ex[0] + "/" + fn)
+                            break
+                   # else:
+                   #     files_to_read.append(ex[0] + "/" + fn)
 
     return files_to_read
 
-fp = "/home/chamomile/Thyme-lab/data/shortened_vids/6dpf"
-all_files = find_all_videos_for_tracking(fp, ext="avi")
+fp = "C:\\tmp"
+dates = ["07-15", "07-16", "07-17", "07-18",]
+all_files = find_all_videos_for_tracking(fp, dates=dates, ext="mp4")
 
 print("Running on list of videos:", all_files)
 
