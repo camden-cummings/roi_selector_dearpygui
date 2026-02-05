@@ -1,7 +1,5 @@
 import dearpygui.dearpygui as dpg
 
-#TODO: DECIDE IF make both inherited functions
-
 def get_mouse_pos(shift: tuple[int, int]) -> tuple[int, int]:
     """Shifts mouse position by shift to allow canvas to be put anywhere in a window."""
     x, y = dpg.get_mouse_pos()

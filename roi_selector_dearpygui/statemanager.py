@@ -1,7 +1,7 @@
 """Redirects callbacks to appropriate class."""
 import dearpygui.dearpygui as dpg
 
-from .interfaces import *
+from .interfaces import ROIInterface, LineInterface, RoiPoly
 from .roi_generation import generate_rois
 
 class StateManager:
@@ -142,6 +142,7 @@ class StateManager:
 
     def down_callback(self):
         """When down or D key pressed."""
+        print('down')
         if self.ROI_mode_selected:
             self.roi_interface.down_callback()
         else:
@@ -149,6 +150,7 @@ class StateManager:
 
     def right_callback(self):
         """When right or D key pressed."""
+        print('right')
         if self.ROI_mode_selected:
             self.roi_interface.right_callback()
         else:

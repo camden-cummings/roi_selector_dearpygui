@@ -1,6 +1,6 @@
 """"""
 import os
-from pathlib import Path
+import argparse
 
 import cv2
 import dearpygui.dearpygui as dpg
@@ -8,7 +8,7 @@ import dearpygui.dearpygui as dpg
 from roi_selector_dearpygui.interfaces.helpers import get_shape
 from roi_selector_dearpygui.video_gui import VideoGUI
 
-def find_all_videos_for_tracking(path=None, dates=None, ext="avi"):
+def find_all_videos_for_tracking(path=None, dates=None, exts=["avi"]):
     """
     Finds all avi files in current working directory, if path given finds all
     avi files in path that aren't output of the algorithm.
@@ -26,7 +26,7 @@ def find_all_videos_for_tracking(path=None, dates=None, ext="avi"):
         for fn in ex[2]:
             fn_ext = fn.split('.')[-1]
 
-            if fn_ext == ext:
+            if fn_ext in exts:
                 if dates is None:
                     files_to_read.append(ex[0] + "/" + fn)
                 else:
@@ -34,50 +34,54 @@ def find_all_videos_for_tracking(path=None, dates=None, ext="avi"):
                         if d in fn:
                             files_to_read.append(ex[0] + "/" + fn)
                             break
-                   # else:
-                   #     files_to_read.append(ex[0] + "/" + fn)
 
     return files_to_read
 
-fp = "C:\\tmp"
-dates = ["07-15", "07-16", "07-17", "07-18",]
-all_files = find_all_videos_for_tracking(fp, dates=dates, ext="mp4")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--video_fp",
+        action='store',
+        type=str,
+        required=True
+    )
 
-print("Running on list of videos:", all_files)
+    args = parser.parse_args()
+    video_fp = args.video_fp
 
-vid_exts = [".avi", ".mp4"]
-img_exts = [".png"]
-for filename in all_files:
-    print(filename)
-    dpg.create_context()
+    all_files = find_all_videos_for_tracking(video_fp, exts=["avi", "mp4"])
 
-    ext = filename.split('.')[-1]
-    ext = "." + ext
-    vidcap = None
-    
-    if ext in vid_exts:
-        vidcap = cv2.VideoCapture(filename)
-        
-        frame_width = int(vidcap.get(3))
-        frame_height = int(vidcap.get(4))
-                
-    elif ext in img_exts:
-        curr_img = cv2.imread(filename)
-        shape = curr_img.shape
-        frame_width, frame_height = get_shape(shape)
+    print("Running on list of videos:", all_files)
 
-    if frame_width == 0 or frame_height == 0:
-        print("Video does not exist, or is formatted incorrectly.")
-    else:
-        window = dpg.add_window(label="Video player", pos=(50, 50), width=frame_width, height=frame_height)
+    vid_exts = [".avi", ".mp4"]
+    img_exts = [".png"]
+    for filename in all_files:
+        print(filename)
+        dpg.create_context()
 
-        path = Path(filename)
-        curr_dir = path.parent
-        curr_name = str(path.stem)
+        ext = filename.split('.')[-1]
+        ext = "." + ext
+        vidcap = None
 
-        m = VideoGUI(window, frame_width, frame_height, filename, vid_exts, img_exts)
+        if ext in vid_exts:
+            vidcap = cv2.VideoCapture(filename)
 
-        m.start(window)
-        
-    dpg.destroy_context()
+            frame_width = int(vidcap.get(3))
+            frame_height = int(vidcap.get(4))
+
+        elif ext in img_exts:
+            curr_img = cv2.imread(filename)
+            shape = curr_img.shape
+            frame_width, frame_height = get_shape(shape)
+
+        if frame_width == 0 or frame_height == 0:
+            print("Video does not exist, or is formatted incorrectly.")
+        else:
+            window = dpg.add_window(label="Video player", pos=(50, 50), width=frame_width, height=frame_height)
+
+            m = VideoGUI(window, frame_width, frame_height, filename, vid_exts, img_exts)
+
+            m.start(window)
+
+        dpg.destroy_context()
 

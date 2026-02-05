@@ -112,6 +112,7 @@ class LineInterface:
 
     def right_callback(self):
         """Move all lines right."""
+        print('right 2')
         self.move_lines_incremented(-1, 0)
 
     def move_line(self, mouse_pos: tuple[int, int]):
@@ -292,14 +293,13 @@ class LineInterface:
 
             for point_num in range(1, 3, 1):
                 x, y = config_dict["p"+str(point_num)]
-
-                if x in [0.0, self.frame_width]:
+                if x in [self.shift[0], self.frame_width+self.shift[0]]:
                     if point_num == 1:
                         dpg.configure_item(line, p1=[x, y-dy])
                     else:
                         dpg.configure_item(line, p2=[x, y-dy])
 
-                elif y in [0.0, self.frame_height]:
+                elif y in [self.shift[1], self.frame_height+self.shift[1]]:
                     if point_num == 1:
                         dpg.configure_item(line, p1=[x-dx, y])
                     else:

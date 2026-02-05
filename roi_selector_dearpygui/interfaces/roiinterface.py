@@ -4,6 +4,7 @@ import pickle
 import dearpygui.dearpygui as dpg
 import numpy as np
 from shapely.geometry import Point, Polygon
+import cv2
 
 from .helpers import get_mouse_pos
 from .roipoly import RoiPoly
@@ -245,16 +246,39 @@ class ROIInterface:
 
     def convert_rois_to_np_array(self, rois: list[RoiPoly]):
         """Converts all ROIPolys to numpy arrays."""
-        lines = []
+        sorted_rois = []
         for roi in rois:
             l = roi.lines
-            poly = []
+            cx, cy = self.find_centroid_of_contour(np.array(l))
+            sorted_rois.append([[cx, cy], l])
 
+        # sorting ROIs by X and then Y position, means that if you have ROIs placed like:
+        # A    B
+        # C    D
+        # the sorted order will be:
+        # D 0, C 1, B 2, A 3
+
+        sorted_rois.sort(key=lambda tup: tup[0][0])
+        sorted_rois.sort(key=lambda tup: tup[0][1])
+
+        lines = []
+        for center, l in sorted_rois:
+            print(center, l)
+            poly = []
             for point in l:
                 poly.append([point[0]-self.shift[0], point[1]-self.shift[1]])
 
             lines.append(poly)
         return lines
+
+    @staticmethod
+    def find_centroid_of_contour(contour):
+        """Given a contour, finds centroid of it."""
+        M = cv2.moments(contour)
+
+        cx = int(M['m10'] / M['m00'])
+        cy = int(M['m01'] / M['m00'])
+        return cx, cy
 
     def convert_np_array_to_rois(self, lines: list[np.ndarray]):
         """Converts numpy arrays to ROIPolys."""
