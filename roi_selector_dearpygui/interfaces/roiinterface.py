@@ -263,7 +263,6 @@ class ROIInterface:
 
         lines = []
         for center, l in sorted_rois:
-            print(center, l)
             poly = []
             for point in l:
                 poly.append([point[0]-self.shift[0], point[1]-self.shift[1]])

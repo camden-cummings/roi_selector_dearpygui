@@ -109,7 +109,7 @@ class GUI:
                 pos=[shift+10, down_shift+50],
                 vertical=True,
                 min_value=0.0,
-                max_value=max_roi_area,
+                max_value=int(max_roi_area/3),
                 default_value=0.0,
                 callback=state_manager.roi_interface.roi_slider_size_callback_min
             )
@@ -120,8 +120,8 @@ class GUI:
                 pos=[shift+70, down_shift+50],
                 vertical=True,
                 min_value=0.0,
-                max_value=max_roi_area, 
-                default_value=max_roi_area,
+                max_value=int(max_roi_area/3),
+                default_value=int(max_roi_area/3),
                 callback=state_manager.roi_interface.roi_slider_size_callback_max
             )
 

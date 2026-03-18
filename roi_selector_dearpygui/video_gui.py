@@ -12,7 +12,7 @@ from .statemanager import StateManager
 class VideoGUI(GUI):
     """"""
 
-    def __init__(self, window, frame_width, frame_height, filename: str, vid_exts=[""], img_exts=[""]):
+    def __init__(self, window, frame_width, frame_height, filename: str, vid_exts=[".avi", ".mp4"], img_exts=[".png", ".jpg"]):
         self.vidcap = cv2.VideoCapture(filename)
         self.curr_img = None
 
@@ -28,18 +28,17 @@ class VideoGUI(GUI):
 
     def open_file_callback(self, _, appdata: dict):
         fn = list(appdata["selections"].values())[0]
-        fn_ext = "." + fn.split(".")[-1]
 
         prev_frame_width = self.frame_width
         prev_frame_height = self.frame_height
 
-        if fn_ext in self.vid_exts:
+        if cv2.imread(fn) is None:
             self.vidcap = cv2.VideoCapture(fn)
 
             self.frame_width = self.vidcap.get(3)
             self.frame_height = self.vidcap.get(4)
 
-        elif fn_ext in self.img_exts:
+        else:
             self.vidcap = None
             self.curr_img = cv2.imread(fn)
 
@@ -55,8 +54,8 @@ class VideoGUI(GUI):
 
     def reset_all_GUI_elements(self): # TODO: fix video changing
         pass
-        #dpg.configure_item("texture_tag", width=self.frame_width, height=self.frame_height)
-        #dpg.add_image("texture_tag", pos=[8, 8], parent=self.window)
+#        dpg.configure_item("texture_tag", width=self.frame_width, height=self.frame_height)
+#        dpg.add_image("texture_tag", pos=[8, 8], parent=self.window)
 
     def start(self, window):
         raw_data = np.zeros((self.frame_height, self.frame_width, 3), dtype=np.float32)

@@ -112,7 +112,6 @@ class LineInterface:
 
     def right_callback(self):
         """Move all lines right."""
-        print('right 2')
         self.move_lines_incremented(-1, 0)
 
     def move_line(self, mouse_pos: tuple[int, int]):
@@ -250,7 +249,7 @@ class LineInterface:
 
         return points, line_num
 
-    def copy(self):
+    def copy_callback(self):
         """Copy line being hovered over."""
         points, _ = self.check_for_hover()
         if len(points) > 0:

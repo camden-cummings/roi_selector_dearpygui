@@ -142,7 +142,6 @@ class StateManager:
 
     def down_callback(self):
         """When down or D key pressed."""
-        print('down')
         if self.ROI_mode_selected:
             self.roi_interface.down_callback()
         else:
@@ -150,7 +149,6 @@ class StateManager:
 
     def right_callback(self):
         """When right or D key pressed."""
-        print('right')
         if self.ROI_mode_selected:
             self.roi_interface.right_callback()
         else:

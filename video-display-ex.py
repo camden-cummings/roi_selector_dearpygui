@@ -49,27 +49,25 @@ if __name__ == "__main__":
     args = parser.parse_args()
     video_fp = args.video_fp
 
-    all_files = find_all_videos_for_tracking(video_fp, exts=["avi", "mp4"])
-
+    if os.path.isdir(video_fp):
+        all_files = find_all_videos_for_tracking(video_fp, exts=["avi", "mp4"])
+    else:
+        all_files = [video_fp]
     print("Running on list of videos:", all_files)
 
-    vid_exts = [".avi", ".mp4"]
-    img_exts = [".png"]
     for filename in all_files:
-        print(filename)
         dpg.create_context()
 
         ext = filename.split('.')[-1]
         ext = "." + ext
         vidcap = None
 
-        if ext in vid_exts:
+        if cv2.imread(filename) is None:
             vidcap = cv2.VideoCapture(filename)
 
             frame_width = int(vidcap.get(3))
             frame_height = int(vidcap.get(4))
-
-        elif ext in img_exts:
+        else:
             curr_img = cv2.imread(filename)
             shape = curr_img.shape
             frame_width, frame_height = get_shape(shape)
@@ -79,7 +77,7 @@ if __name__ == "__main__":
         else:
             window = dpg.add_window(label="Video player", pos=(50, 50), width=frame_width, height=frame_height)
 
-            m = VideoGUI(window, frame_width, frame_height, filename, vid_exts, img_exts)
+            m = VideoGUI(window, frame_width, frame_height, filename)
 
             m.start(window)
 
