@@ -4,7 +4,7 @@ GUI for selection of ROIs using [DearPyGUI](https://github.com/hoffstadt/DearPyG
 
 <!-- ROI Selection -->
 
-https://github.com/user-attachments/assets/6718bf05-bd96-42cd-b06c-2554f001681e
+https://github.com/user-attachments/assets/a4717845-e8d7-4570-a40c-18c2082c44ed
 
 <!-- Line Selection -->
 
