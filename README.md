@@ -1,17 +1,17 @@
 ## About The Project
 
-GUI for selection of ROIs using DearPyGUI and Python; can be overlayed on top of images, videos, or live camera feeds. Also defines methods for interacting with ROIs (i.e. dragging, rotating). 
+GUI for selection of ROIs using [DearPyGUI](https://github.com/hoffstadt/DearPyGui) and Python; can be overlayed on top of images, videos, or live camera feeds. Also defines methods for interacting with ROIs (i.e. dragging, rotating). 
 
 <!-- ROI Selection -->
 
-![ROI Selection Image](roiselection.png)
-
+https://github.com/user-attachments/assets/6718bf05-bd96-42cd-b06c-2554f001681e
 
 <!-- Line Selection -->
 
 Line interface is used to define a set of lines and create ROIs based on them, as shown.
 
-![Line Selection Image](lineselection.png)
+https://github.com/user-attachments/assets/349db09e-6821-4589-9933-36cfc477c680
+
 
 ### Installation
 
@@ -25,22 +25,12 @@ Line interface is used to define a set of lines and create ROIs based on them, a
    ```
 
 ## Usage
-```sh
-import dearpygui.dearpygui as dpg
-from visibility_manager import VisibilityManager
+For an example of what a full example without video looks like, please go to: basic-full-ex.py
 
-dpg.create_context()
+For an example of what that would look like overlayed on a video: video-display-ex.py
 
-frame_width = 500
-frame_height = 500
-
-m = VisibilityManager("file_save_path", frame_width, frame_height)
-while dpg.is_dearpygui_running():
-    dpg.render_dearpygui_frame()
-    
-dpg.destroy_context()
-```
+And for an example overlayed onto a live camera: https://github.com/camden-cummings/zebrafish-tracker/gui_tracker.py
 
 ## Acknowledgments
 
-* Originally developed as an evolution of [this code]() in matplotlib, that implementation is linked [here]().
+* Originally developed in matplotlib as an extension of [this code](https://github.com/jdoepfert/roipoly.py). 
