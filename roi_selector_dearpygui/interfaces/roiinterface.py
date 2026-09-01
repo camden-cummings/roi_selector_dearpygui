@@ -103,7 +103,10 @@ class ROIInterface:
 
     def save_rois_callback(self, _, app_data: dict):
         """Saves all ROIs to a file."""
-        with open(app_data["file_path_name"], 'wb') as filename:
+        self.save_rois(app_data["file_path_name"])
+        
+    def save_rois(self, save_filename):
+        with open(save_filename, 'wb') as f:
             allowed_rois = []
 
             for roi in self.rois:
@@ -111,7 +114,7 @@ class ROIInterface:
                     allowed_rois.append(roi)
 
             lines = self.convert_rois_to_np_array(allowed_rois)
-            pickle.dump(lines, filename)
+            pickle.dump(lines, f)
 
     def load_rois_callback(self, _, app_data: dict):
         """Loads all ROIs into current canvas."""

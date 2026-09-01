@@ -153,3 +153,6 @@ class StateManager:
             self.roi_interface.right_callback()
         else:
             self.line_interface.right_callback()
+            
+    def save_rois(self, save_filename):
+        self.roi_interface.save_rois(save_filename)

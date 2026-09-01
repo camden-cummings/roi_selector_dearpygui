@@ -5,7 +5,7 @@ from .statemanager import StateManager
 class GUI:
     """Sets and manages GUI elements - set up for line interface and ROI interface. """
 
-    def __init__(self, window, frame_width=500, frame_height=500): #TODO investigate if this works for basic ROI
+    def __init__(self, window, frame_width=500, frame_height=500): 
         self.frame_width = frame_width
         self.frame_height = frame_height
         self.roi, self.line, self.roi_and_line_selection, self.post_line, self.state_manager = self.setup_elements(window)
@@ -38,6 +38,9 @@ class GUI:
         self.state_manager.ROI_mode_selected = False
 
         self.state_manager.clear_window()
+
+    def save_rois(self, save_filename):
+        self.state_manager.save_rois(save_filename)
 
     @staticmethod
     def setup_roi_buttons(shift, down_shift, curr_dir, curr_name, state_manager):
