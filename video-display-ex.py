@@ -43,13 +43,22 @@ if __name__ == "__main__":
         "--video_fp",
         action='store',
         type=str,
-        required=True
+        required=False
+    )
+    parser.add_argument(
+        "--date_format",
+        action='store',
+        type=str,
+        required=False
     )
 
     args = parser.parse_args()
     video_fp = args.video_fp
-
-    if os.path.isdir(video_fp):
+    date_format = str(args.date_format)
+    
+    if date_format is not None:
+        all_files = find_all_videos_for_tracking(video_fp, dates=[date_format], exts=["avi", "mp4"])
+    elif os.path.isdir(video_fp):
         all_files = find_all_videos_for_tracking(video_fp, exts=["avi", "mp4"])
     else:
         all_files = [video_fp]
